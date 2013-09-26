@@ -34,10 +34,6 @@ while(1){
 #check the file size
  $size = -s $_dirr."/".$_fname;
  if ($pos < $size){
- if (!defined($db)){
- print LOG "#>> Нет подключения к бд!".localtime()."\n";
- die();
- }
 #the strings of its length and translated into the following
 #$str - file string, $len length of string(byte) 
   $str = <FILE>;
@@ -56,12 +52,12 @@ while(1){
   if (scalar(@co) == 0){
 #id like if not, create 
    $indb = $db->prepare("INSERT INTO `pbss_general` (`id`,`name`,`guid`,`date`) VALUES ('$id', '$name', '$guid', '$date')");
-   $indb->execute;
+   $indb->execute();
     print LOG "#>> Найден новый скриншот! Id=".$id."\n";
   }else{
 #id like if there is, replace  
    $updb = $db->prepare("UPDATE `pbss_general` SET `id`='$id',`name`='$name',`guid`='$guid',`date`='$date' WHERE `id`='$id'");
-   $updb->execute;
+   $updb->execute();
    print LOG "#>> Перезаписываю старый скриншот. Id=".$id."\n";
   }
   if ($id =~/pb002000/){
@@ -69,18 +65,11 @@ while(1){
   sysopen SFILE, $_dirr."/".$_fname,O_WRONLY | O_CREAT | O_TRUNC;
   print SFILE "#>> Last time list was cleared: ".localtime()."\n";
   close SFILE;
-  print LOG "#>> Обнаружен последний скриншот, переоткрываю ".$_fname." ,очищаю и записываю дату очищения.\n";
   sleep(30);
   open FILE , $_dirr."/".$_fname;
-  if (!defined(<FILE>)){
- print LOG "#>> Не открылся файл!!!".localtime()."\n";
- die();
- }
  } 
  }else{
 #if no new rows, then sleep for 15 seconds
  sleep(15);
  }
 }
-close FILE;
-$db->disconnect;
