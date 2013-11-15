@@ -60,7 +60,7 @@ while(1){
    $updb->execute();
    print LOG "#>> Перезаписываю старый скриншот. Id=".$id."\n";
   }
-  if ($id =~/pb002000/){
+  if ($id =~/$_maxid/){
   close FILE;
   sysopen SFILE, $_dirr."/".$_fname,O_WRONLY | O_CREAT | O_TRUNC;
   print SFILE "#>> Last time list was cleared: ".localtime()."\n";
